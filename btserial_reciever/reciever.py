@@ -5,13 +5,9 @@ import rclpy
 import time
 import serial
 import json
-from std_msgs.msg import String
+from geometry_msgs.msg import Vector3
 from rclpy.node import Node
 
-# Este codigo sirve para la comunicacion serial entre una ESP y una Raspberry. Es un nodo de ros2 que publica el mensaje entregado 
-# por la ESP en el tópico "respuestaESP". Los mensajes son tipo String. 
-
-# Este codigo es para ROS2.
 
 class btreciever(Node):
 
@@ -23,16 +19,23 @@ class btreciever(Node):
         except Exception:
             pass
         super().__init__('BTReciever')
-        self.RPYinfo = self.create_publisher(String,'RPYinfo',10)
+        self.RPYinfo = self.create_publisher(Vector3,'RPYinfo',10)
         while rclpy.ok():
             self.ser = serial.Serial('/dev/rfcomm0', 9600, timeout=1)
             if self.ser.in_waiting > 0:
                 print("R")
                 line = serial.Serial('/dev/rfcomm0', 9600, timeout=1).readline().decode('utf-8').rstrip()
-                msg = String()
-                msg.data=line
                 print(line)
                 print("P")
+                splitString = line.split(";")
+                roll = splitString[1]
+                pitch = splitString[2]
+                yaw = splitString[3]
+                msg = Vector3()
+                msg.x = roll 
+                msg.y = pitch
+                msg.z = yaw
+                
                 self.RPYinfo.publish(msg)
 
 
