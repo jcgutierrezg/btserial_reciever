@@ -1,8 +1,37 @@
 import rclpy
 from rclpy.node import Node
+import math
 
 from geometry_msgs.msg import Vector3
-
+from geometry_msgs.msg import Quaternion
+ 
+import numpy as np # Scientific computing library for Python
+ 
+def get_quaternion_from_euler(roll, pitch, yaw):
+  """
+  Convert an Euler angle to a quaternion.
+   
+  Input
+    :param roll: The roll (rotation around x-axis) angle in radians.
+    :param pitch: The pitch (rotation around y-axis) angle in radians.
+    :param yaw: The yaw (rotation around z-axis) angle in radians.
+ 
+  Output
+    :return qx, qy, qz, qw: The orientation in quaternion [x,y,z,w] format
+  """
+  
+  rollR = math.radians(roll)
+  pitchR = math.radians(pitch)
+  yawR = math.radians(yaw)
+  
+  q = [0] * 4
+  
+  q[1] = np.sin(rollR/2) * np.cos(pitchR/2) * np.cos(yawR/2) - np.cos(rollR/2) * np.sin(pitchR/2) * np.sin(yawR/2)
+  q[2] = np.cos(rollR/2) * np.sin(pitchR/2) * np.cos(yawR/2) + np.sin(rollR/2) * np.cos(pitchR/2) * np.sin(yawR/2)
+  q[3] = np.cos(rollR/2) * np.cos(pitchR/2) * np.sin(yawR/2) - np.sin(rollR/2) * np.sin(pitchR/2) * np.cos(yawR/2)
+  q[0] = np.cos(rollR/2) * np.cos(pitchR/2) * np.cos(yawR/2) + np.sin(rollR/2) * np.sin(pitchR/2) * np.sin(yawR/2)
+ 
+  return q
 
 class TranslateQuaternion(Node):
 
@@ -14,15 +43,32 @@ class TranslateQuaternion(Node):
             self.listener_callback,
             10)
         self.subscription  # prevent unused variable warning
+        self.quat_info = self.create_publisher(Quaternion,'quat_info',10)
 
     def listener_callback(self, msg):
         #self.get_logger().info('I heard: "%s"' % msg.data)
         Roll = msg.x
         Pitch = msg.y
         Yaw = msg.z
+        
+        quat = get_quaternion_from_euler(Roll, Pitch, Yaw)
+        
+        quatmsg = Quaternion()
+        quatmsg.w = quat[0]
+        quatmsg.x = quat[1]
+        quatmsg.y = quat[2]
+        quatmsg.z = quat[3]
+        
+        self.quat_info.publish(quatmsg)
+        
         print("Roll: " + str(Roll) + ", ")
         print("Pitch: " + str(Pitch) + ", ")
         print("Yaw: " + str(Yaw) + "\n")
+        
+        print("W: " + str(quatmsg.w) + ", ")
+        print("X: " + str(quatmsg.x) + ", ")
+        print("Y: " + str(quatmsg.y) + ", ")
+        print("Z: " + str(quatmsg.z) + "\n")
 
 
 def main(args=None):
