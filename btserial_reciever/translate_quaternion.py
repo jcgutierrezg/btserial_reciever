@@ -20,9 +20,9 @@ class TranslateQuaternion(Node):
         Roll = msg.x
         Pitch = msg.y
         Yaw = msg.z
-        print("Roll: " + Roll + ", ")
-        print("Pitch: " + Pitch + ", ")
-        print("Yaw: " + Yaw + "\n")
+        print("Roll: " + str(Roll) + ", ")
+        print("Pitch: " + str(Pitch) + ", ")
+        print("Yaw: " + str(Yaw) + "\n")
 
 
 def main(args=None):
