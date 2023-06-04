@@ -49,8 +49,8 @@ class TranslateQuaternion(Node):
 
     def listener_callback(self, msg):
         #self.get_logger().info('I heard: "%s"' % msg.data)
-        Roll = msg.x
-        Pitch = msg.y
+        Roll = msg.y
+        Pitch = msg.x
         Yaw = msg.z
         
         quat = get_quaternion_from_euler(Roll, Pitch, Yaw)
@@ -58,8 +58,8 @@ class TranslateQuaternion(Node):
         posemsg = Pose()
         
         posemsg.position.x = 0.0
-        posemsg.position.y = 0.1
-        posemsg.position.z = 0.6
+        posemsg.position.y = -0.2
+        posemsg.position.z = 0.5
         posemsg.orientation.w = quat[0]
         posemsg.orientation.x = quat[1]
         posemsg.orientation.y = quat[2]
