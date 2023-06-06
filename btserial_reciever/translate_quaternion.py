@@ -2,13 +2,10 @@ import rclpy
 from rclpy.node import Node
 import math
 
-from geometry_msgs.msg import Vector3
 from geometry_msgs.msg import Pose
  
 import numpy as np # Scientific computing library for Python
  
-
-
 def get_quaternion_from_euler(roll, pitch, yaw):
   """
   Convert an Euler angle to a quaternion.
@@ -40,7 +37,7 @@ class TranslateQuaternion(Node):
     def __init__(self):
         super().__init__('translate_quaternion')
         self.subscription = self.create_subscription(
-            Vector3,
+            Pose,
             'RPYinfo',
             self.listener_callback,
             10)
@@ -49,17 +46,17 @@ class TranslateQuaternion(Node):
 
     def listener_callback(self, msg):
         #self.get_logger().info('I heard: "%s"' % msg.data)
-        Roll = msg.y
-        Pitch = msg.x
-        Yaw = msg.z
+        Roll = msg.orientation.y
+        Pitch = msg.orientation.x
+        Yaw = msg.orientation.z
         
         quat = get_quaternion_from_euler(Roll, Pitch, Yaw)
         
         posemsg = Pose()
         
-        posemsg.position.x = 0.0
-        posemsg.position.y = -0.2
-        posemsg.position.z = 0.5
+        posemsg.position.x = msg.position.x
+        posemsg.position.y = msg.position.y
+        posemsg.position.z = msg.position.z
         posemsg.orientation.w = quat[0]
         posemsg.orientation.x = quat[1]
         posemsg.orientation.y = quat[2]
