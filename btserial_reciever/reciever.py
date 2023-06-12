@@ -42,6 +42,7 @@ posYhome = -0.2
 posZhome = 0.5
 
 NullFlag = 0
+
  
 
 class MasterGlove(StateMachine):
@@ -176,59 +177,59 @@ class MasterGlove(StateMachine):
 
             if(self.IK_Axis == 0):
 
-                if(JoyX>100 and JoyX<156):
+                if(JoyX>500 and JoyX<540):
 
                     posX = posX
 
-                elif(JoyX>=156):
+                elif(JoyX>=540):
 
-                    posX = posX + (JoyX/128-1)
+                    posX = posX + (JoyX/512-1)/100
 
-                elif(JoyX<=100):
+                elif(JoyX<=500):
 
-                    posX = posX - ((255-JoyX)/128-1)
+                    posX = posX - ((1023-JoyX)/512-1)/100
 
 
 
-                if(JoyY>100 and JoyY<156):
+                if(JoyY>500 and JoyY<540):
 
                     posY = posY
 
-                elif(JoyY>=156):
+                elif(JoyY>=540):
 
-                    posY = posY + (JoyY/128-1)
+                    posY = posY + (JoyY/512-1)/100
 
-                elif(JoyY<=100):
+                elif(JoyY<=500):
 
-                    posY = posY - ((255-JoyY)/128-1)
+                    posY = posY - ((1023-JoyY)/512-1)/100
 
             else:
 
-                if(JoyX>100 and JoyX<156):
+                if(JoyX>500 and JoyX<540):
 
                     posZ = posZ
 
-                elif(JoyX>=156):
+                elif(JoyX>=540):
 
-                    posZ = posZ + (JoyX/128-1)
+                    posZ = posZ + (JoyX/512-1)/100
 
-                elif(JoyX<=100):
+                elif(JoyX<=500):
 
-                    posZ = posZ - ((255-JoyX)/128-1)
+                    posZ = posZ - ((1023-JoyX)/512-1)/100
 
 
 
-                if(JoyY>100 and JoyY<156):
+                if(JoyY>500 and JoyY<540):
 
                     posY = posY
 
-                elif(JoyY>=156):
+                elif(JoyY>=540):
 
-                    posY = posY + (JoyY/128-1)
+                    posY = posY + (JoyY/512-1)/100
 
-                elif(JoyY<=100):
+                elif(JoyY<=500):
 
-                    posY = posY - ((255-JoyY)/128-1)
+                    posY = posY - ((1023-JoyY)/512-1)/100
 
 
     def RPYState(self):
@@ -382,87 +383,87 @@ class MasterGlove(StateMachine):
 
             if(self.DK_Pair == 0):
 
-                if(JoyX>100 and JoyX<156):
+                if(JoyX>500 and JoyX<540):
 
                     angle1 = angle1
 
-                elif(JoyX>=156):
+                elif(JoyX>=540):
 
-                    angle1 = angle1 + (JoyX/128-1)
+                    angle1 = angle1 + (JoyX/512-1)
 
-                elif(JoyX<=100):
+                elif(JoyX<=500):
 
-                    angle1 = angle1 - ((255-JoyX)/128-1)
+                    angle1 = angle1 - ((1023-JoyX)/512-1)
 
 
 
-                if(JoyY>100 and JoyY<156):
+                if(JoyY>500 and JoyY<540):
 
                     angle2 = angle2
 
-                elif(JoyY>=156):
+                elif(JoyY>=540):
 
-                    angle2 = angle2 + (JoyY/128-1)
+                    angle2 = angle2 + (JoyY/512-1)
 
-                elif(JoyY<=100):
+                elif(JoyY<=500):
 
-                    angle2 = angle2 - ((255-JoyY)/128-1)
+                    angle2 = angle2 - ((1023-JoyY)/512-1)
 
             elif(self.DK_Pair == 1):
 
-                if(JoyX>100 and JoyX<156):
+                if(JoyX>500 and JoyX<540):
 
                     angle3 = angle3
 
-                elif(JoyX>=156):
+                elif(JoyX>=540):
 
-                    angle3 = angle3 + (JoyX/128-1)
+                    angle3 = angle3 + (JoyX/512-1)
 
-                elif(JoyX<=100):
+                elif(JoyX<=500):
 
-                    angle3 = angle3 - ((255-JoyX)/128-1)
+                    angle3 = angle3 - ((1023-JoyX)/512-1)
 
 
 
-                if(JoyY>100 and JoyY<156):
+                if(JoyY>500 and JoyY<540):
 
                     angle4 = angle4
 
-                elif(JoyY>=156):
+                elif(JoyY>=540):
 
-                    angle4 = angle4 + (JoyY/128-1)
+                    angle4 = angle4 + (JoyY/512-1)
 
-                elif(JoyY<=100):
+                elif(JoyY<=500):
 
-                    angle4 = angle4 - ((255-JoyY)/128-1)
+                    angle4 = angle4 - ((1023-JoyY)/512-1)
 
             else:
 
-                if(JoyX>100 and JoyX<156):
+                if(JoyX>500 and JoyX<540):
 
                     angle5 = angle5
 
-                elif(JoyX>=156):
+                elif(JoyX>=540):
 
-                    angle5 = angle5 + (JoyX/128-1)
+                    angle5 = angle5 + (JoyX/512-1)
 
-                elif(JoyX<=100):
+                elif(JoyX<=500):
 
-                    angle5 = angle5 - ((255-JoyX)/128-1)
+                    angle5 = angle5 - ((1023-JoyX)/512-1)
 
 
 
-                if(JoyY>100 and JoyY<156):
+                if(JoyY>500 and JoyY<540):
 
                     angle6 = angle6
 
-                elif(JoyY>=156):
+                elif(JoyY>=540):
 
-                    angle6 = angle6 + (JoyY/128-1)
+                    angle6 = angle6 + (JoyY/512-1)
 
-                elif(JoyY<=100):
+                elif(JoyY<=500):
 
-                    angle6 = angle6 - ((255-JoyY)/128-1)
+                    angle6 = angle6 - ((1023-JoyY)/512-1)
 
 
 class btreciever(Node):
