@@ -5,6 +5,14 @@ import math
 from geometry_msgs.msg import Pose
  
 import numpy as np # Scientific computing library for Python
+
+prevPosX = 0.0
+prevPosY = 0.0
+prevPosZ = 0.0
+prevOriX = 0.0
+prevOriY = 0.0
+prevOriZ = 0.0
+
  
 def get_quaternion_from_euler(roll, pitch, yaw):
   """
@@ -45,24 +53,46 @@ class TranslateQuaternion(Node):
         self.quat_info = self.create_publisher(Pose,'robocol/arm_desired_pose',10)
 
     def listener_callback(self, msg):
+    
+        global prevPosX, prevPosY, prevPosZ, prevOriX, prevOriY, prevOriZ
         #self.get_logger().info('I heard: "%s"' % msg.data)
+
         Roll = msg.orientation.y
         Pitch = msg.orientation.x
         Yaw = msg.orientation.z
+
+        PosX = msg.position.x
+        PosY = msg.position.y
+        PosZ = msg.position.z
+
+        if(Roll == prevOriX and Pitch == prevOriY and Yaw == prevOriZ and PosX == prevPosX and PosY == prevPosY and PosZ == prevPosZ):
+            newPose = False
+        else:
+            newPose = True
+
+        if(newPose):
         
-        quat = get_quaternion_from_euler(Roll, Pitch, Yaw)
-        
-        posemsg = Pose()
-        
-        posemsg.position.x = msg.position.x
-        posemsg.position.y = msg.position.y
-        posemsg.position.z = msg.position.z
-        posemsg.orientation.w = quat[0]
-        posemsg.orientation.x = quat[1]
-        posemsg.orientation.y = quat[2]
-        posemsg.orientation.z = quat[3]
-        	
-        self.quat_info.publish(posemsg)
+            quat = get_quaternion_from_euler(Roll, Pitch, Yaw)
+            
+            posemsg = Pose()
+            
+            posemsg.position.x = PosX
+            posemsg.position.y = PosY
+            posemsg.position.z = PosZ
+            posemsg.orientation.w = quat[0]
+            posemsg.orientation.x = quat[1]
+            posemsg.orientation.y = quat[2]
+            posemsg.orientation.z = quat[3]
+            	
+            self.quat_info.publish(posemsg)
+
+            prevOriX = Roll
+            prevOriY = Pitch
+            prevOriZ = Yaw
+
+            prevPosX = PosX
+            prevPosY = PosY
+            prevPosZ = PosZ
         
         #print("Roll: " + str(Roll) + ", ")
         #print("Pitch: " + str(Pitch) + ", ")
