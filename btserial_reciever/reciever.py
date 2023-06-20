@@ -1,5 +1,6 @@
 from statemachine import StateMachine, State
 import time
+import requests
 
 from warnings import catch_warnings
 import rclpy
@@ -8,6 +9,7 @@ import json
 from geometry_msgs.msg import Pose
 from rclpy.node import Node
 
+url = "http://192.168.75.70/pose"
 
 posX = 0
 posY = 0
@@ -470,12 +472,6 @@ class btreciever(Node):
 
     def __init__(self):
         global glove
-        try:
-            self.ser = serial.Serial('/dev/pts/1', 9600, timeout=1)
-            self.ser.reset_input_buffer()   
-            print("Conexion Serial exitosa")     
-        except Exception:
-            pass
         super().__init__('BTReciever')
         self.RPYinfo = self.create_publisher(Pose,'RPYinfo',10)
         self.ATTinyinfo = self.create_publisher(Pose,'ATTinyInfo',10)
@@ -486,24 +482,24 @@ class btreciever(Node):
 
         global roll, pitch, yaw, JoyX, JoyY, button
 
-        #self.ser = serial.Serial('/dev/pts/1', 9600, timeout=1)
-        #if self.ser.in_waiting > 0:
-        if 1:
-            #print("R")
-            #line = serial.Serial('/dev/pts/1', 9600, timeout=1).read_until('\n').decode('utf-8').rstrip()
-            line = "10;20;30;128;128;0"
-            print(line)
-            #print("P")
+        response = requests.get(url)
 
-            splitString = line.split(";")
-            if len(splitString) == 6:
+        if(response.status_code == 200):
+            line = response.text
 
-                roll = splitString[0]
-                pitch = splitString[1]
-                yaw = splitString[2]
-                JoyX = splitString[3]
-                JoyY = splitString[4]
-                button = splitString[5]
+        print(line)
+        #line = "10;20;30;128;128;0"
+        #print(line)
+        #print("P")
+        splitString = line.split(";")
+        if len(splitString) == 6:
+
+            roll = splitString[0]
+            pitch = splitString[1]
+            yaw = splitString[2]
+            JoyX = splitString[3]
+            JoyY = splitString[4]
+            button = splitString[5]
 
     def publishPose(self):
 
