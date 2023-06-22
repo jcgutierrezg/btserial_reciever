@@ -7,6 +7,7 @@ import rclpy
 import serial
 import json
 from geometry_msgs.msg import Pose
+from std_msgs.msg import String
 from rclpy.node import Node
 
 url = "http://192.168.75.70/pose"
@@ -39,8 +40,8 @@ switchFlag4 = 0
 switchFlag5 = 0
 switchFlag6 = 0
 
-posXhome = 0
-posYhome = -0.2
+posXhome = 0.2
+posYhome = 0.0
 posZhome = 0.5
 
 NullFlag = 0
@@ -78,7 +79,7 @@ class MasterGlove(StateMachine):
         super(MasterGlove, self).__init__()
 
 
-    def NullState(self):
+    def NullState(self, BTRecieverO):
 
         global NullFlag, button
 
@@ -94,17 +95,17 @@ class MasterGlove(StateMachine):
                 currentTime = time.time()
 
                 totalTime = currentTime-startTime
-                btreciever.readGlove(self)
+                BTRecieverO.readGlove()
 
             if(totalTime >= 2.0):
-                switchLaser()
+                BTRecieverO.switchLaser()
             else:
-                switchGripper() 
+                BTRecieverO.switchGripper() 
 
         else:
             pass
 
-    def InverseKinState(self):
+    def InverseKinState(self, BTRecieverO):
 
         global NullFlag, button, posX, JoyX, posY, JoyY, posZ, currentSubstate
 
@@ -115,12 +116,12 @@ class MasterGlove(StateMachine):
                 currentTime = time.time()
 
                 totalTime = currentTime-startTime
-                btreciever.readGlove(self)
+                BTRecieverO.readGlove()
 
             if(totalTime >= 2.0):
-                switchLaser()
+                BTRecieverO.switchLaser()
             else:
-                switchGripper()
+                BTRecieverO.switchGripper()
 
         elif(button == 1):
             startTime = time.time()
@@ -129,12 +130,12 @@ class MasterGlove(StateMachine):
                 currentTime = time.time()
 
                 totalTime = currentTime-startTime
-                btreciever.readGlove(self)
+                BTRecieverO.readGlove()
 
             if(totalTime >= 2.0):
-                moveItExec()
+                BTRecieverO.moveItExec()
             else:
-                moveItPlan()
+                BTRecieverO.moveItPlan()
 
 
         else:
@@ -161,11 +162,11 @@ class MasterGlove(StateMachine):
 
                 elif(JoyY>=540):
 
-                    posY = posY - (JoyY/512-1)/1000
+                    posY = posY + (JoyY/512-1)/1000
 
                 elif(JoyY<=500):
 
-                    posY = posY + ((1023-JoyY)/512-1)/1000
+                    posY = posY - ((1023-JoyY)/512-1)/1000
 
             else:
 
@@ -189,14 +190,14 @@ class MasterGlove(StateMachine):
 
                 elif(JoyY>=540):
 
-                    posY = posY - (JoyY/512-1)/1000
+                    posY = posY + (JoyY/512-1)/1000
 
                 elif(JoyY<=500):
 
-                    posY = posY + ((1023-JoyY)/512-1)/1000
+                    posY = posY - ((1023-JoyY)/512-1)/1000
 
 
-    def RPYState(self):
+    def RPYState(self, BTRecieverO):
 
         global NullFlag, button, roll, pitch, yaw, OriX, OriY, OriZ
 
@@ -207,12 +208,12 @@ class MasterGlove(StateMachine):
                 currentTime = time.time()
 
                 totalTime = currentTime-startTime
-                btreciever.readGlove(self)
+                BTRecieverO.readGlove()
 
             if(totalTime >= 2.0):
-                switchLaser()
+                BTRecieverO.switchLaser()
             else:
-                switchGripper()
+                BTRecieverO.switchGripper()
 
         elif(button == 1):
             startTime = time.time()
@@ -221,12 +222,12 @@ class MasterGlove(StateMachine):
                 currentTime = time.time()
 
                 totalTime = currentTime-startTime
-                btreciever.readGlove(self)
+                BTRecieverO.readGlove()
 
             if(totalTime >= 2.0):
-                moveItExec()
+                BTRecieverO.moveItExec()
             else:
-                moveItPlan()
+                BTRecieverO.moveItPlan()
         else:
 
             OriX = roll
@@ -234,7 +235,7 @@ class MasterGlove(StateMachine):
             OriZ = yaw
             
 
-    def HomeState(self):
+    def HomeState(self, BTRecieverO):
 
         global NullFlag, button, posX, posY, posZ, posXhome, posYhome, posZhome, OriX, OriY, OriZ
 
@@ -245,12 +246,12 @@ class MasterGlove(StateMachine):
                 currentTime = time.time()
 
                 totalTime = currentTime-startTime
-                btreciever.readGlove(self)
+                BTRecieverO.readGlove()
 
             if(totalTime >= 2.0):
-                switchLaser()
+                BTRecieverO.switchLaser()
             else:
-                switchGripper()
+                BTRecieverO.switchGripper()
 
         elif(button == 1):
             startTime = time.time()
@@ -259,12 +260,12 @@ class MasterGlove(StateMachine):
                 currentTime = time.time()
 
                 totalTime = currentTime-startTime
-                btreciever.readGlove(self)
+                BTRecieverO.readGlove()
 
             if(totalTime >= 2.0):
-                moveItExec()
+                BTRecieverO.moveItExec()
             else:
-                moveItPlan()
+                BTRecieverO.moveItPlan()
 
         else:
 
@@ -283,7 +284,7 @@ class MasterGlove(StateMachine):
 
             #etc
 
-    def DirectKinState(self):
+    def DirectKinState(self, BTRecieverO):
 
         global NullFlag, button, angle1, angle2, angle3, angle4, angle5, angle6, currentSubstate, JoyX, JoyY
 
@@ -294,12 +295,12 @@ class MasterGlove(StateMachine):
                 currentTime = time.time()
 
                 totalTime = currentTime-startTime
-                btreciever.readGlove(self)
+                BTRecieverO.readGlove()
 
             if(totalTime >= 2.0):
-                switchLaser()
+                BTRecieverO.switchLaser()
             else:
-                switchGripper()
+                BTRecieverO.switchGripper()
 
         elif(button == 1):
             startTime = time.time()
@@ -308,10 +309,10 @@ class MasterGlove(StateMachine):
                 currentTime = time.time()
 
                 totalTime = currentTime-startTime
-                btreciever.readGlove(self)
+                BTRecieverO.readGlove()
 
             if(totalTime >= 2.0):
-                btreciever.writeATTinys(self, 3.0)
+                BTRecieverO.writeATTinys(3.0)
 
             else:
                 pass
@@ -326,11 +327,11 @@ class MasterGlove(StateMachine):
 
                 elif(JoyX>=540):
 
-                    angle1 = angle1 + (JoyX/512-1)
+                    angle1 = angle1 + (JoyX/512-1)/100
 
                 elif(JoyX<=500):
 
-                    angle1 = angle1 - ((1023-JoyX)/512-1)
+                    angle1 = angle1 - ((1023-JoyX)/512-1)/100
 
 
 
@@ -340,11 +341,11 @@ class MasterGlove(StateMachine):
 
                 elif(JoyY>=540):
 
-                    angle2 = angle2 + (JoyY/512-1)
+                    angle2 = angle2 + (JoyY/512-1)/100
 
                 elif(JoyY<=500):
 
-                    angle2 = angle2 - ((1023-JoyY)/512-1)
+                    angle2 = angle2 - ((1023-JoyY)/512-1)/100
 
             elif(currentSubstate == 2):
 
@@ -354,11 +355,11 @@ class MasterGlove(StateMachine):
 
                 elif(JoyX>=540):
 
-                    angle3 = angle3 + (JoyX/512-1)
+                    angle3 = angle3 + (JoyX/512-1)/100
 
                 elif(JoyX<=500):
 
-                    angle3 = angle3 - ((1023-JoyX)/512-1)
+                    angle3 = angle3 - ((1023-JoyX)/512-1)/100
 
 
 
@@ -368,11 +369,11 @@ class MasterGlove(StateMachine):
 
                 elif(JoyY>=540):
 
-                    angle4 = angle4 + (JoyY/512-1)
+                    angle4 = angle4 + (JoyY/512-1)/100
 
                 elif(JoyY<=500):
 
-                    angle4 = angle4 - ((1023-JoyY)/512-1)
+                    angle4 = angle4 - ((1023-JoyY)/512-1)/100
 
             else:
 
@@ -382,11 +383,11 @@ class MasterGlove(StateMachine):
 
                 elif(JoyX>=540):
 
-                    angle5 = angle5 + (JoyX/512-1)
+                    angle5 = angle5 + (JoyX/512-1)/100
 
                 elif(JoyX<=500):
 
-                    angle5 = angle5 - ((1023-JoyX)/512-1)
+                    angle5 = angle5 - ((1023-JoyX)/512-1)/100
 
 
 
@@ -396,11 +397,11 @@ class MasterGlove(StateMachine):
 
                 elif(JoyY>=540):
 
-                    angle6 = angle6 + (JoyY/512-1)
+                    angle6 = angle6 + (JoyY/512-1)/100
 
                 elif(JoyY<=500):
 
-                    angle6 = angle6 - ((1023-JoyY)/512-1)
+                    angle6 = angle6 - ((1023-JoyY)/512-1)/100
 
 
 class btreciever(Node):
@@ -410,6 +411,7 @@ class btreciever(Node):
         super().__init__('BTReciever')
         self.RPYinfo = self.create_publisher(Pose,'RPYinfo',10)
         self.ATTinyinfo = self.create_publisher(Pose,'ATTinyinfo',10)
+        self.ArmAction = self.create_publisher(String,'robocol/arm/action',10)
         while(rclpy.ok()):
             masterCycle(self, glove)
 
@@ -450,8 +452,8 @@ class btreciever(Node):
 
         msg.orientation.w = float(0.0)
         msg.orientation.x = float(OriX)
-        msg.orientation.y = float(OriY)
-        msg.orientation.z = float(OriZ)
+        msg.orientation.y = float(OriY+90.0)
+        msg.orientation.z = float(90.0)
 
         print(posX)
         print(posY)
@@ -461,7 +463,7 @@ class btreciever(Node):
         print(OriZ)
 
         self.RPYinfo.publish(msg)
-        print("Sent Pose")
+        print("Sent Pose to planning")
 
     def publishATTiny(self, Mode):
 
@@ -479,7 +481,7 @@ class btreciever(Node):
         msg.orientation.z = float(angle6)
 
         self.ATTinyinfo.publish(msg)
-        print("Sent Pose")
+        print("Sent data to ATTinys")
 
         angle1 = 0.0
         angle2 = 0.0
@@ -487,6 +489,48 @@ class btreciever(Node):
         angle4 = 0.0
         angle5 = 0.0
         angle6 = 0.0
+
+    def switchLaser(self):
+        global angle1, angle2, angle3, angle4, angle5, angle6
+
+        angle1 = 0.0
+        angle2 = 0.0
+        angle3 = 0.0
+        angle4 = 0.0
+        angle5 = 0.0
+        angle6 = 0.0
+
+        self.publishATTiny(1.0)
+
+    def switchGripper(self):
+
+        global angle1, angle2, angle3, angle4, angle5, angle6
+
+        angle1 = 0.0
+        angle2 = 0.0
+        angle3 = 0.0
+        angle4 = 0.0
+        angle5 = 0.0
+        angle6 = 0.0
+
+        self.publishATTiny(2.0)
+
+    def moveItPlan(self):
+
+        msg = String()
+
+        msg.data = 'plan'
+
+        self.ArmAction.publish(msg)
+
+
+    def moveItExec(self):
+
+        msg = String()
+
+        msg.data = 'execute'
+
+        self.ArmAction.publish(msg)
 
 
 
@@ -497,7 +541,7 @@ def masterCycle(btrecieverN, gloveS):
 
     while(gloveS.Null.is_active):
         btrecieverN.readGlove()
-        gloveS.NullState()
+        gloveS.NullState(btrecieverN)
         #print(currentState)
         print("Null")
 
@@ -520,7 +564,7 @@ def masterCycle(btrecieverN, gloveS):
 
     while(gloveS.InverseKin.is_active):
         btrecieverN.readGlove()
-        gloveS.InverseKinState()
+        gloveS.InverseKinState(btrecieverN)
         btrecieverN.publishPose()
         print("IK")
         if(currentState != 2):
@@ -529,7 +573,7 @@ def masterCycle(btrecieverN, gloveS):
 
     while(gloveS.RPY.is_active):
         btrecieverN.readGlove()
-        gloveS.RPYState()
+        gloveS.RPYState(btrecieverN)
         btrecieverN.publishPose()
         print("RPY")
         if(currentState != 3):
@@ -538,7 +582,7 @@ def masterCycle(btrecieverN, gloveS):
 
     while(gloveS.Home.is_active):
         btrecieverN.readGlove()
-        gloveS.HomeState()
+        gloveS.HomeState(btrecieverN)
         btrecieverN.publishPose()
         print("Home")
         if(currentState != 4):
@@ -547,46 +591,15 @@ def masterCycle(btrecieverN, gloveS):
 
     while(gloveS.DirectKin.is_active):
         btrecieverN.readGlove()
-        gloveS.DirectKinState()
+        gloveS.DirectKinState(btrecieverN)
         print("DK")
         if(currentState != 5):
 
             gloveS.DirectKin_Null()
 
-def switchLaser():
-    global angle1, angle2, angle3, angle4, angle5, angle6
-
-    angle1 = 0.0
-    angle2 = 0.0
-    angle3 = 0.0
-    angle4 = 0.0
-    angle5 = 0.0
-    angle6 = 0.0
-
-    btreciever.publishATTiny(btreciever, 1.0)
-
-def switchGripper():
-
-    global angle1, angle2, angle3, angle4, angle5, angle6
-
-    angle1 = 0.0
-    angle2 = 0.0
-    angle3 = 0.0
-    angle4 = 0.0
-    angle5 = 0.0
-    angle6 = 0.0
-
-    btreciever.publishATTiny(btreciever, 2.0)
-
-def moveItPlan():
-    test = 1
-
-def moveItExec():
-    test = 1
-
 
 def main(args=None):
-    global glove 
+    global glove
     glove = MasterGlove()
     glove.initiate()
     rclpy.init(args=args)
