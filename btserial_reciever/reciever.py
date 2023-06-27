@@ -8,9 +8,10 @@ import serial
 import json
 from geometry_msgs.msg import Pose
 from std_msgs.msg import String
+from std_msgs.msg import Bool
 from rclpy.node import Node
 
-url = "http://192.168.75.70/pose"
+url = "http://192.168.208.70/pose"
 
 posX = 0
 posY = 0
@@ -42,7 +43,7 @@ switchFlag6 = 0
 
 posXhome = 0.2
 posYhome = 0.0
-posZhome = 0.5
+posZhome = 0.65
 
 NullFlag = 0
 
@@ -277,7 +278,7 @@ class MasterGlove(StateMachine):
 
             OriX = 0.0
 
-            OriY = 0.0
+            OriY = 180.0
 
             OriZ = 0.0
 
@@ -312,7 +313,7 @@ class MasterGlove(StateMachine):
                 BTRecieverO.readGlove()
 
             if(totalTime >= 2.0):
-                BTRecieverO.writeATTinys(3.0)
+                BTRecieverO.publishATTinys(3.0)
 
             else:
                 pass
@@ -403,6 +404,13 @@ class MasterGlove(StateMachine):
 
                     angle6 = angle6 - ((1023-JoyY)/512-1)/100
 
+        print(angle1)
+        print(angle2)
+        print(angle3)
+        print(angle4)
+        print(angle5)
+        print(angle6)
+
 
 class btreciever(Node):
 
@@ -412,6 +420,7 @@ class btreciever(Node):
         self.RPYinfo = self.create_publisher(Pose,'RPYinfo',10)
         self.ATTinyinfo = self.create_publisher(Pose,'ATTinyinfo',10)
         self.ArmAction = self.create_publisher(String,'robocol/arm/action',10)
+        self.ExecuteBool = self.create_publisher(Bool,'robocol/arm/next_position',10)
         while(rclpy.ok()):
             masterCycle(self, glove)
 
@@ -526,11 +535,16 @@ class btreciever(Node):
 
     def moveItExec(self):
 
-        msg = String()
+        msgS = String()
 
-        msg.data = 'execute'
+        msgS.data = 'execute'
 
-        self.ArmAction.publish(msg)
+        self.ArmAction.publish(msgS)
+
+        msgB = Bool()
+
+        msgB.data = True
+        self.ExecuteBool.publish(msgB)
 
 
 
