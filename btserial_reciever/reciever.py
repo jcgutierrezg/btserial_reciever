@@ -11,7 +11,7 @@ from std_msgs.msg import String
 from std_msgs.msg import Bool
 from rclpy.node import Node
 
-url = "http://192.168.208.70/pose"
+url = "http://192.168.216.70/pose"
 
 posX = 0
 posY = 0
@@ -232,7 +232,7 @@ class MasterGlove(StateMachine):
         else:
 
             OriX = roll
-            OriY = pitch
+            OriY = -pitch
             OriZ = yaw
             
 
@@ -278,9 +278,9 @@ class MasterGlove(StateMachine):
 
             OriX = 0.0
 
-            OriY = 180.0
+            OriY = 0.0
 
-            OriZ = 0.0
+            OriZ = 120.0
 
 
             #etc
@@ -460,9 +460,9 @@ class btreciever(Node):
         msg.position.z = float(posZ)
 
         msg.orientation.w = float(0.0)
-        msg.orientation.x = float(OriX)
-        msg.orientation.y = float(OriY+90.0)
-        msg.orientation.z = float(90.0)
+        msg.orientation.x = float(OriX+180.0) #ORIX
+        msg.orientation.y = float(OriY+90.0) #ORIY
+        msg.orientation.z = float(90.0) #ORIZ
 
         print(posX)
         print(posY)
