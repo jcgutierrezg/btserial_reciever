@@ -20,7 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'reciever = btserial_reciever.reciever:main'
+            'reciever = btserial_reciever.reciever:main',
+            'translate_quaternion = btserial_reciever.translate_quaternion:main'
         ],
     },
 )
